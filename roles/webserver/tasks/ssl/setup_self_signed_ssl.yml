@@ -1,0 +1,22 @@
+---
+- name: Setup self-signed ssl
+  become: true
+  become_user: "{{ server_user }}"
+  block:
+    - name: Generate private key
+      openssl_privatekey:
+        path: "{{ ssl_certificate_cert_key_path }}"
+        owner: "{{ server_user }}"
+    - name: Generate CSR
+      openssl_csr:
+        path: "{{ ssl_certificate_csr_path }}"
+        privatekey_path: "{{ ssl_certificate_cert_key_path }}"
+        common_name: "{{ server_hostname }}"
+        owner: "{{ server_user }}"
+    - name: Generate Self-Signed Certificate
+      openssl_certificate:
+        path: "{{ ssl_certificate_cert_path }}"
+        privatekey_path: "{{ ssl_certificate_cert_key_path }}"
+        csr_path: "{{ ssl_certificate_csr_path }}"
+        provider: selfsigned
+        owner: "{{ server_user }}"

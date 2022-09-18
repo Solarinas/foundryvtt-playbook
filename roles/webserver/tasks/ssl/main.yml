@@ -1,0 +1,27 @@
+---
+- name: SSL Path
+  become: true
+  become_user: "{{ server_user }}"
+  block:
+    - name: Create SSL Directory
+      set_fact:
+        ssl_certificate_csr_path: "{{ certificate_dir }}/live/{{ server_hostname }}/csr.csr"
+        ssl_certificate_cert_path: "{{ certificate_dir }}/live/{{ server_hostname }}/fullchain.pem"
+        ssl_certificate_cert_key_path: "{{ certificate_dir }}/live/{{ server_hostname }}/privkey.pem"
+    - name: Create SSL directory
+      stat:
+        path: "{{ ssl_certificate_cert_path }}"
+      register: ssl_certificate_cert_path_result
+    - name: Create SSL Directory
+      file:
+        path: "{{ ssl_certificate_csr_path|dirname }}"
+        state: directory
+        mode: 0700
+        owner: "{{ server_user }}"
+      when: "not ssl_certificate_cert_path_result.stat.exists"
+
+- import_tasks: "{{ role_path }}/tasks/ssl/setup_self_signed_ssl.yml"
+  when: ssl_method == 'selfsigned'
+
+- import_tasks: "{{ role_path }}/tasks/ssl/setup_certbot.yml"
+  when: ssl_method == 'letsencrypt'

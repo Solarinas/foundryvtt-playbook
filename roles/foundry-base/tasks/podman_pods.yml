@@ -1,0 +1,15 @@
+---
+- name: Setup Pods
+  become: yes
+  become_user: "{{ server_user }}"
+  block:
+    - name: Create Foundry pod
+      containers.podman.podman_pod:
+        name: "{{ foundry_pod }}"
+        state: started
+        ports:
+          - "8080:80"
+          - "4430:443"
+        generate_systemd:
+          path: "{{ foundry_user_registry.home }}/.config/systemd/user"
+          restart_policy: always

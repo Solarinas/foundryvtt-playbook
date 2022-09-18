@@ -1,0 +1,31 @@
+---
+- name: Setup Web Server
+  become: true
+  become_user: "{{ server_user }}"
+  block:
+    - name: Pull Nginx image
+      podman_image:
+        name: "{{ nginx_docker_image }}"
+        tag: "{{ nginx_version }}"
+    - name: Generate nginx config
+      template:
+        src: nginx.conf.j2
+        dest: "{{ foundry_user_registry.home }}/nginx.conf"
+        mode: 0700
+    - name: Create Nginx container
+      containers.podman.podman_container:
+        name: '{{ nginx_container_name }}'
+        image: "{{ nginx_docker_image }}:{{ nginx_version }}"
+        state: started
+        pod: "{{ foundry_pod }}"
+        volumes:
+          - "{{ foundry_user_registry.home }}/nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+          - "{{ certificate_dir }}:/etc/ssl:ro"
+        generate_systemd:
+          path: "{{ foundry_user_registry.home }}/.config/systemd/user"
+          restart_policy: always
+    - name: Enable nginx service
+      systemd:
+        name: "container-{{ nginx_container_name }}"
+        enabled: yes
+        scope: user

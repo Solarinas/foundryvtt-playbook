@@ -1,0 +1,12 @@
+---
+- name: Setup Foundry user profile
+  become: true
+  block:
+    - name: Create non-root user
+      user:
+        name: '{{ server_user }}'
+        comment: 'User profile for FoundryVTT'
+        # password: '{{ server_password }}'
+      register: foundry_user_registry # Store all user info in variable
+    - name: Enable linger for user
+      command: 'loginctl enable-linger {{ server_user }}'

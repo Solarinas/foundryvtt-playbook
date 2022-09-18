@@ -1,0 +1,6 @@
+---
+- import_tasks: "{{ role_path }}/tasks/ssl/main.yml"
+
+- import_tasks: "{{ role_path }}/tasks/setup_nginx.yml"
+
+- import_tasks: "{{ role_path }}/tasks/port_forward.yml"

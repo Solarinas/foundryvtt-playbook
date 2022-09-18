@@ -1,0 +1,9 @@
+# Foundry username and password
+foundry_username:
+foundry_password:
+
+foundry_admin_key: # Generate with pwgen -s 16 1
+
+server_hostname:
+server_user: 'foundry'
+ssl_method: '' # selfsigned or letsencrypt

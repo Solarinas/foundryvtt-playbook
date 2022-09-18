@@ -1,0 +1,12 @@
+---
+- name: Setup SUSE base
+  become: true
+  block:
+    - name: Install dependencies
+      community.general.zypper:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - podman
+        - slirp4netns
+        - fuse-overlayfs

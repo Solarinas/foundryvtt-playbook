@@ -1,0 +1,11 @@
+nginx_docker_image: 'docker.io/nginx'
+nginx_version: '1.20-alpine'
+certbot_docker_image: 'docker.io/certbot/certbot'
+certbot_version: 'v1.22.0'
+
+
+certificate_dir: "{{ foundry_user_registry.home }}/ssl"
+letsencrypt_dir: "{{ foundry_user_registry.home }}/letsencrypt"
+
+nginx_container_name: 'foundryvtt-nginx'
+certbot_container_name: 'foundryvtt-certbot'

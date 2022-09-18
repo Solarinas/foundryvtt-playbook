@@ -1,0 +1,7 @@
+---
+#- name: Setup CoreOS Base
+#  become: true
+#  block:
+#    - name: Install dependencies
+#      community.general.rpm_ostree_pkg:
+#      name

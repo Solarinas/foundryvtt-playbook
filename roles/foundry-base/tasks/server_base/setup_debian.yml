@@ -1,0 +1,17 @@
+---
+- name: Setup Debian Base
+  become: true
+  block:
+    - name: Install dependencies
+      apt:
+        pkg:
+          # Podman Dependencies
+          - podman
+          - slirp4netns
+          - fuse-overlayfs
+          - procps
+          - acl # ansible fails to set tmp files without it?
+          - python3-openssl # for automating self-signed ssl
+          - iptables-persistent # make firewall rules work across reboots
+        state: present
+        update_cache: yes

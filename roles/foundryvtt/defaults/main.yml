@@ -1,0 +1,5 @@
+foundry_docker_image: "docker.io/felddy/foundryvtt"
+foundry_version: "9"
+
+foundryvtt_container_name: 'foundryvtt'
+foundry_data: 'foundrydata'

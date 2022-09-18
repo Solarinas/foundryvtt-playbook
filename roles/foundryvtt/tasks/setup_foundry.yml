@@ -1,0 +1,31 @@
+---
+- name: Setup Foundry
+  become: true
+  become_user: "{{ server_user }}"
+  block:
+    - name: Pull Foundry Image
+      podman_image:
+        name: "{{ foundry_docker_image }}"
+        tag: "{{ foundry_version }}"
+    - name: Create Foundry container
+      containers.podman.podman_container:
+        name: '{{ foundryvtt_container_name }}'
+        image: "{{ foundry_docker_image }}:{{ foundry_version }}"
+        state: started
+        pod: "{{ foundry_pod }}"
+        env:
+           FOUNDRY_USERNAME: '{{ foundry_username }}'
+           FOUNDRY_PASSWORD: '{{ foundry_password }}'
+           FOUNDRY_ADMIN_KEY: '{{ foundry_admin_key }}'
+           FOUNDRY_AWS_CONFIG: '/data/Config/s3.json'
+           FOUNDRY_MINIFY_STATIC_FILES: true
+        volumes:
+          - '{{ foundry_data }}:/data'
+        generate_systemd:
+          path: "{{ foundry_user_registry.home }}/.config/systemd/user"
+          restart_policy: always
+    - name: Enable foundry service
+      systemd:
+        name: "container-{{ foundryvtt_container_name }}"
+        enabled: yes
+        scope: user

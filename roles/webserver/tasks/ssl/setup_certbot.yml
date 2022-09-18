@@ -1,0 +1,21 @@
+---
+- name: Setup Certbot
+  become: true
+  become_user: '{{ server_user }}'
+  block:
+    - name: Pull Certbot image
+      podman_image:
+        name: "{{ certbot_docker_image }}"
+        tag: "{{ certbot_version }}"
+    - name: Create certbot container
+      containers.podman.podman_container:
+        name: '{{ certbot_container_name }}'
+        image: '{{ certbot_docker_image }}:{{ certbot_version }}'
+        state: started
+        ports:
+          - "8081:80"
+          - "4431:443"
+        volumes:
+          - "{{ certificate_dir }}:/etc/letsencrypt"
+        command: "certonly --non-interactive --work-dir=~/.certbot/work --http-01-port 80 --standalone --preferred-challenges http --agree-tos --email=solarinass@protonmail.com -d {{ server_hostname }}"
+    - import_tasks: "roles/foundry-base/tasks/podman_pods.yml"

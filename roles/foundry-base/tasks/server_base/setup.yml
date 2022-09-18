@@ -1,0 +1,9 @@
+---
+- include_tasks: "{{ role_path }}/tasks/server_base/setup_debian.yml"
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: "{{ role_path }}/tasks/server_base/setup_suse.yml"
+  when: ansible_os_family == 'Suse'
+
+- include_tasks: "{{ role_path }}/tasks/server_base/setup_coreos.yml"
+  when: ansible_distribution == 'Coreos'

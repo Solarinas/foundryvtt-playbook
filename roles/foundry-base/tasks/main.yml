@@ -1,0 +1,6 @@
+---
+- import_tasks: "{{ role_path }}/tasks/server_base/setup.yml"
+
+- import_tasks: "{{ role_path }}/tasks/user_create/setup.yml"
+
+# - import_tasks: "{{ role_path }}/tasks/podman_pods.yml"

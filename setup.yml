@@ -1,0 +1,8 @@
+---
+- name: Setup FoundryVTT
+  hosts: foundry_servers
+
+  roles:
+    - foundry-base
+    - webserver
+    - foundryvtt
